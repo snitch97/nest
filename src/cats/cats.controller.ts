@@ -140,8 +140,8 @@ export class CatsController {
 
 // Optional provider
 
-import { Injectable, Optional, Inject } from '@nestjs/common';
-@Injectable()
-export class HttpService<T>{
-    constructor(@Optional() @Inject('HTTP_OPTIONS') private httpClient: T){}
-}
+// import { Injectable, Optional, Inject } from '@nestjs/common';
+// @Injectable()
+// export class HttpService<T>{
+//     constructor(@Optional() @Inject('HTTP_OPTIONS') private httpClient: T){}
+// }

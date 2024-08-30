@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { CatsModule } from './cats/cats.module';
 import { logger } from './common/middleware/logger.middleware';
 import { CatsController } from './cats/cats.controller';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from './http-exception.fillter';
 // import { LoggerMiddleware } from './common/middleware/logger.middleware';
 
 @Module({
@@ -38,3 +40,13 @@ export class AppModule implements NestModule{
     // Multiple middleware
     // consumer.apply(cors(), helmet(), logger).forRoutes(CatsController);
 }
+
+// @Module({
+//   providers: [
+//     {
+//       provide: APP_FILTER,
+//       useClass: HttpExceptionFilter,
+//     }
+//   ]
+// })
+// export class AppModule {}

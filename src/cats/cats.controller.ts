@@ -104,18 +104,44 @@ export class CreateCatDto{
 // }
 
 // LIBRARY-SPECIFIC APPROACH
-import { Controller, Get, Post, HttpStatus, Res } from "@nestjs/common";
-import { Response } from "express";
+// import { Controller, Get, Post, HttpStatus, Res } from "@nestjs/common";
+// import { Response } from "express";
+
+// @Controller('cats')
+// export class CatsController{
+//     @Post()
+//     create(@Res() res: Response){
+//         res.status(HttpStatus.CREATED).send();
+//     }
+//     @Get()
+//     findAll(@Res({passthrough: true}) res:Response){
+//         res.status(HttpStatus.OK);
+//         return [];
+//     }
+// }
+
+import { Controller, Get, Post, Body } from '@nestjs/common';
+import { CatsService } from './cats.service';
+import { Cat } from './interfaces/cat.interface';
 
 @Controller('cats')
-export class CatsController{
+export class CatsController {
+    constructor(private catsService : CatsService){ }
+
     @Post()
-    create(@Res() res: Response){
-        res.status(HttpStatus.CREATED).send();
+    async create(@Body() createCatDto : CreateCatDto){
+        this.catsService.create(createCatDto);
     }
     @Get()
-    findAll(@Res({passthrough: true}) res:Response){
-        res.status(HttpStatus.OK);
-        return [];
+    async findAll(): Promise<Cat[]>{
+        return this.catsService.findAll();
     }
+}
+
+// Optional provider
+
+import { Injectable, Optional, Inject } from '@nestjs/common';
+@Injectable()
+export class HttpService<T>{
+    constructor(@Optional() @Inject('HTTP_OPTIONS') private httpClient: T){}
 }

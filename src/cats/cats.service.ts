@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Cat } from './interfaces/cat.interface';
 
 @Injectable()
@@ -11,5 +11,13 @@ export class CatsService {
 
     findAll(): Cat[] {
         return this.cats;
+    }
+
+    findOne(id:number){
+        const cat = this.cats.at(id-1);
+        if(!cat){
+            throw new NotFoundException(`${id}th Cat not found`);
+        }
+        return cat;
     }
 }

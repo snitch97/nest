@@ -5,11 +5,11 @@
 
 // import { Body, Controller, Delete, Param, Post, Put, Query } from "@nestjs/common";
 
-export class CreateCatDto{
-    name: string;
-    age: number;
-    breed: string;
-}
+// export class CreateCatDto{
+//     name: string;
+//     age: number;
+//     breed: string;
+// }
 
 // const Cat = new CreateCatDto();
 // Cat.name = "kitty";
@@ -120,67 +120,110 @@ export class CreateCatDto{
 //     }
 // }
 
-import { Controller, Get, Post, Body, HttpException, HttpStatus, BadRequestException, UseFilters } from '@nestjs/common';
-import { CatsService } from './cats.service';
-import { Cat } from './interfaces/cat.interface';
-import { HttpExceptionFilter } from 'src/http-exception.fillter';
+// import { Controller, Get, Post, Body, HttpException, HttpStatus, BadRequestException, UseFilters, ParseIntPipe, Param } from '@nestjs/common';
+// import { CatsService } from './cats.service';
+// import { Cat } from './interfaces/cat.interface';
+// import { HttpExceptionFilter } from 'src/http-exception.fillter';
 
-export class ForbiddenException extends HttpException {
-    constructor(){
-        super('Forbiden', HttpStatus.FORBIDDEN);
-    }
-}
-@Controller('cats')
-export class CatsController {
-    constructor(private catsService : CatsService){ }
+// export class ForbiddenException extends HttpException {
+//     constructor(){
+//         super('Forbiden', HttpStatus.FORBIDDEN);
+//     }
+// }
+// @Controller('cats')
+// export class CatsController {
+//     constructor(private catsService : CatsService){ }
 
-    // @Post()
-    // async create(@Body() createCatDto : CreateCatDto){
-    //     this.catsService.create(createCatDto);
-    // }
+//     // @Post()
+//     // async create(@Body() createCatDto : CreateCatDto){
+//     //     this.catsService.create(createCatDto);
+//     // }
     
-    // @UseFilters(new HttpExceptionFilter())
-    // async create(@Body() createCatDto: CreateCatDto){
-    //     throw new ForbiddenException();
-    // }
+//     // @UseFilters(new HttpExceptionFilter())
+//     // async create(@Body() createCatDto: CreateCatDto){
+//     //     throw new ForbiddenException();
+//     // }
 
-    // @Get()
-    // async findAll(): Promise<Cat[]>{
-    //     return this.catsService.findAll();
-    // }
+//     // @Get()
+//     // async findAll(): Promise<Cat[]>{
+//     //     return this.catsService.findAll();
+//     // }
 
-    // Throwing standard exceptions
-    @Get()
-    async findAll(){
-        // throw new ForbiddenException();
-        throw new BadRequestException('Something bad happened', {cause: new Error(), description:"Some error description"});
-    }
+//     // Throwing standard exceptions
+//     @Get()
+//     async findAll(){
+//         // throw new ForbiddenException();
+//         throw new BadRequestException('Something bad happened', {cause: new Error(), description:"Some error description"});
+//     }
 
-    // @Get()
-    // async findAll(){
-    //     try{
-    //         await this.catsService.findAll();
-    //     }
-    //     catch (error) {
-    //         throw new HttpException({
-    //             status: HttpStatus.FORBIDDEN,
-    //             error: 'This is a custom message'
-    //         },HttpStatus.FORBIDDEN, {
-    //             cause: error
-    //         });
-    //     }
-    // }
-}
-
-// Optional provider
-
-// import { Injectable, Optional, Inject } from '@nestjs/common';
-// @Injectable()
-// export class HttpService<T>{
-//     constructor(@Optional() @Inject('HTTP_OPTIONS') private httpClient: T){}
+//     /*  Using Pipe
+//     // @Get()
+//     // async findOne(@Param('id', ParseIntPipe) id: number){
+//     //     return this.catsService.findOne(id);
+//     // } 
+// */
+//     // @Get()
+//     // async findAll(){
+//     //     try{
+//     //         await this.catsService.findAll();
+//     //     }
+//     //     catch (error) {
+//     //         throw new HttpException({
+//     //             status: HttpStatus.FORBIDDEN,
+//     //             error: 'This is a custom message'
+//     //         },HttpStatus.FORBIDDEN, {
+//     //             cause: error
+//     //         });
+//     //     }
+//     // }
 // }
 
-// For example, to set up a filter as controller-scoped, you would do the following:
+// // Optional provider
 
-// @UseFilters(new HttpExceptionFilter())
-// export class CatsController {}
+// // import { Injectable, Optional, Inject } from '@nestjs/common';
+// // @Injectable()
+// // export class HttpService<T>{
+// //     constructor(@Optional() @Inject('HTTP_OPTIONS') private httpClient: T){}
+// // }
+
+// // For example, to set up a filter as controller-scoped, you would do the following:
+
+// // @UseFilters(new HttpExceptionFilter())
+// // export class CatsController {}
+
+import { Body, Controller, Param, PipeTransform, Post, UsePipes, Get, Query, DefaultValuePipe, ParseBoolPipe } from "@nestjs/common";
+import { CatsService } from "./cats.service";
+import { ValidationPipe, ZodValidationPipe } from "./pipe/validation.pipe";
+import { ParseIntPipe } from "./pipe/parse-int.pipe";
+import { CreateCatDto } from "./dto/create-cat.dto";
+import { createCatSchema } from "./schemas/create-cat.schema";
+
+@Controller('cats')
+export class CatsController{
+    constructor(private readonly catsService:CatsService){}
+
+    // @Post()
+    // @UsePipes(new ZodValidationPipe(createCatSchema))
+    // async create(@Body() createCatDto:CreateCatDto){
+    //     this.catsService.create(createCatDto);
+    // }
+
+    @Post()
+    async create(@Body(new ValidationPipe()) createCatDto: CreateCatDto){
+        this.catsService.create(createCatDto);
+    }
+
+    @Get(':id')
+    async findOne(@Param('id', new ParseIntPipe()) id){
+        return this.catsService.findOne(id);
+    }
+
+    // Providing defaults
+    // @Get()
+    // async findAll(
+    //     @Query('activeOnly', new DefaultValuePipe(false),ParseBoolPipe) activeOnly:boolean,
+    //     @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number
+    // ){
+    //     return this.catsService.findAll({activeOnly, page});
+    // }
+}

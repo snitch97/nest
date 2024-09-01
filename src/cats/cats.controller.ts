@@ -198,7 +198,7 @@ import { ParseIntPipe } from "./pipe/parse-int.pipe";
 import { CreateCatDto } from "./dto/create-cat.dto";
 import { createCatSchema } from "./schemas/create-cat.schema";
 import { RolesGuard } from "./guard/roles.guard";
-import { Roles } from "./guard/roles.decorator";
+import { Roles } from "./decorators/roles.decorator";
 import { LoggingInterceptor } from "./interceptors/logging.interceptor";
 
 @Controller('cats')

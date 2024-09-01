@@ -191,7 +191,7 @@
 // // @UseFilters(new HttpExceptionFilter())
 // // export class CatsController {}
 
-import { Body, Controller, Param, PipeTransform, Post, UsePipes, Get, Query, DefaultValuePipe, ParseBoolPipe, UseGuards } from "@nestjs/common";
+import { Body, Controller, Param, PipeTransform, Post, UsePipes, Get, Query, DefaultValuePipe, ParseBoolPipe, UseGuards, UseInterceptors } from "@nestjs/common";
 import { CatsService } from "./cats.service";
 import { ValidationPipe, ZodValidationPipe } from "./pipe/validation.pipe";
 import { ParseIntPipe } from "./pipe/parse-int.pipe";
@@ -199,9 +199,11 @@ import { CreateCatDto } from "./dto/create-cat.dto";
 import { createCatSchema } from "./schemas/create-cat.schema";
 import { RolesGuard } from "./guard/roles.guard";
 import { Roles } from "./guard/roles.decorator";
+import { LoggingInterceptor } from "./interceptors/logging.interceptor";
 
 @Controller('cats')
 @UseGuards(RolesGuard)
+@UseInterceptors(LoggingInterceptor)
 export class CatsController{
     constructor(private readonly catsService:CatsService){}
 

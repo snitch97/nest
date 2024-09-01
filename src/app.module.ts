@@ -4,9 +4,10 @@ import { AppService } from './app.service';
 import { CatsModule } from './cats/cats.module';
 import { logger } from './common/middleware/logger.middleware';
 import { CatsController } from './cats/cats.controller';
-import { APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { HttpExceptionFilter } from './http-exception.fillter';
 import { RolesGuard } from './cats/guard/roles.guard';
+import { LoggingInterceptor } from './cats/interceptors/logging.interceptor';
 // import { LoggerMiddleware } from './common/middleware/logger.middleware';
 
 // @Module({
@@ -50,8 +51,10 @@ import { RolesGuard } from './cats/guard/roles.guard';
       // useClass: HttpExceptionFilter,
       // provide:APP_PIPE,
       // useClass: ValidationPipe,
-      provide:APP_GUARD,
-      useClass: RolesGuard,
+      // provide:APP_GUARD,
+      // useClass: RolesGuard,
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
     }
   ]
 })

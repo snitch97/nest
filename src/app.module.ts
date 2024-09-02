@@ -9,6 +9,8 @@ import { HttpExceptionFilter } from './http-exception.fillter';
 import { RolesGuard } from './cats/guard/roles.guard';
 import { LoggingInterceptor } from './cats/interceptors/logging.interceptor';
 // import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 // @Module({
 //   imports: [CatsModule],
@@ -44,7 +46,7 @@ import { LoggingInterceptor } from './cats/interceptors/logging.interceptor';
 // }
 
 @Module({
-  imports:[CatsModule],
+  imports:[CatsModule, AuthModule, UsersModule],
   providers: [
     {
       // provide: APP_FILTER,

@@ -11,6 +11,7 @@ import { LoggingInterceptor } from './cats/interceptors/logging.interceptor';
 // import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { CaslModule } from './casl/casl.module';
 
 // @Module({
 //   imports: [CatsModule],
@@ -46,7 +47,7 @@ import { UsersModule } from './users/users.module';
 // }
 
 @Module({
-  imports:[CatsModule, AuthModule, UsersModule],
+  imports:[CatsModule, AuthModule, UsersModule, CaslModule],
   providers: [
     {
       // provide: APP_FILTER,
